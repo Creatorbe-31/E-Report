@@ -1,0 +1,398 @@
+<!doctype html>
+<html lang="id"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>PustakaKita – Katalog Buku Digital</title>
+<meta name="description" content="Temukan buku dari Wikisource, Internet Archive, Project Gutenberg, dan sumber terbuka lainnya.">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#17243A">
+<link rel="stylesheet" href="style.css">
+
+</head><body data-view="home">
+
+<header class="top">
+  <div class="wrap nav-container">
+    <div class="nav-left">
+      <a class="brand" href="#/">
+        <svg class="brand-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path d="M4 19.5V6.5C4 5.39543 4.89543 4.5 6 4.5H18C19.1046 4.5 20 5.39543 20 6.5V19.5C20 20.6046 19.1046 21.5 18 21.5H6C4.89543 21.5 4 20.6046 4 19.5Z" stroke="currentColor" stroke-width="1.5"/>
+          <path d="M8 4.5V21.5M16 4.5V21.5" stroke="currentColor" stroke-width="1.5"/>
+        </svg>
+        <span class="brand-name">PustakaKita</span>
+      </a>
+    </div>
+    <nav class="nav nav-center" aria-label="Utama">
+      <a href="#/" data-nav="home">Beranda</a>
+      <a href="#/cari" data-nav="search">Jelajahi Buku</a>
+      <a href="#/mylibrary" data-nav="mylibrary">Perpustakaan Saya</a>
+      <a href="#/favorit" data-nav="favorites">Favorit</a>
+      <a href="#/riwayat" data-nav="history">Riwayat</a>
+    </nav>
+    <div class="nav-right">
+      <form class="nav-search-form" data-search role="search" aria-label="Pencarian cepat">
+        <svg class="nav-search-icon" width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <circle cx="8.25" cy="8.25" r="5.25" stroke="currentColor" stroke-width="1.5"/>
+          <path d="M12.375 12.375L15.75 15.75" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+        <input name="q" type="search" placeholder="Cari..." aria-label="Cari buku" autocomplete="off">
+      </form>
+      <a class="nav-icon-link" href="#/favorit" data-nav="favorites" aria-label="Favorit">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path d="M9.99996 17.7917L8.79163 16.6917C4.49996 12.8 1.66663 10.2333 1.66663 7.08333C1.66663 4.51667 3.68329 2.5 6.24996 2.5C7.69996 2.5 9.09163 3.175 9.99996 4.24167C10.9083 3.175 12.3 2.5 13.75 2.5C16.3166 2.5 18.3333 4.51667 18.3333 7.08333C18.3333 10.2333 15.5 12.8 11.2083 16.7L9.99996 17.7917Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span class="nav-icon-text">Favorit</span>
+      </a>
+      <a class="nav-icon-link" href="#/riwayat" data-nav="history" aria-label="Riwayat Baca">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <circle cx="10" cy="10" r="7.5" stroke="currentColor" stroke-width="1.5"/>
+          <path d="M10 6.25V10L12.5 12.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+        <span class="nav-icon-text">Riwayat</span>
+      </a>
+      <button class="theme-toggle" id="themeBtn" type="button" aria-label="Ganti tema">Tema</button>
+      <button class="nav-hamburger" id="navHamburger" type="button" aria-label="Menu" aria-controls="navMobileMenu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+  <div class="nav-mobile-menu" id="navMobileMenu">
+    <nav class="nav-mobile" aria-label="Navigasi mobile">
+      <a href="#/" data-nav="home">Beranda</a>
+      <a href="#/cari" data-nav="search">Jelajahi Buku</a>
+      <a href="#/mylibrary" data-nav="mylibrary">Perpustakaan Saya</a>
+      <a href="#/favorit" data-nav="favorites">Favorit</a>
+      <a href="#/riwayat" data-nav="history">Riwayat Baca</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <!-- BERANDA / HERO -->
+  <div data-view-id="home">
+    <section class="hero">
+      <div class="wrap hero-grid">
+        <div class="hero-content">
+          <span class="hero-eyebrow">PUSTAKA TERBUKA · SUMBER TERPERCAYA</span>
+          <h1 class="hero-title">Temukan buku. Mulai membaca, gratis.</h1>
+          <p class="hero-description">Temukan karya berbahasa Indonesia dan Inggris dari katalog terbuka. Baca langsung jika teks lengkap tersedia, atau kunjungi sumber aslinya.</p>
+          <form class="hero-search" data-search role="search">
+            <div class="hero-search-inner">
+              <svg class="hero-search-icon" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <circle cx="9.16667" cy="9.16667" r="5.83333" stroke="currentColor" stroke-width="1.5"/>
+                <path d="M13.75 13.75L16.6667 16.6667" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+              </svg>
+              <input name="q" type="search" placeholder="Cari judul, penulis, atau kata kunci..." aria-label="Cari buku" autocomplete="off">
+              <button type="submit" class="hero-search-btn">Cari Buku</button>
+            </div>
+          </form>
+          <div class="hero-trust" aria-label="Informasi koleksi">
+            <span><b aria-hidden="true">✓</b> Status akses jelas</span>
+            <span><b aria-hidden="true">✓</b> Sumber asli tercantum</span>
+            <span><b aria-hidden="true">✓</b> Indonesia &amp; Inggris</span>
+          </div>
+        </div>
+        <div class="hero-showcase" aria-hidden="true">
+          <div class="book-stack">
+            <article class="book-card book-1">
+              <span class="book-cover-kicker">PUSTAKA TERBUKA</span>
+              <strong class="book-cover-title">Cerita<br>Sepanjang Masa</strong>
+              <span class="book-cover-rule"></span>
+              <span class="book-cover-footer">BACA GRATIS</span>
+            </article>
+            <article class="book-card book-2">
+              <span class="book-cover-kicker">KARYA KLASIK</span>
+              <strong class="book-cover-title">Dunia<br>dalam Kata</strong>
+              <span class="book-cover-rule"></span>
+              <span class="book-cover-footer">TEKS LENGKAP</span>
+            </article>
+            <article class="book-card book-3">
+              <span class="book-cover-kicker">BACAAN PILIHAN</span>
+              <strong class="book-cover-title">Mulai<br>Petualangan</strong>
+              <span class="book-cover-rule"></span>
+              <span class="book-cover-footer">LANGSUNG BACA</span>
+            </article>
+          </div>
+          <div class="showcase-stamp"><span>ASLI</span><small>SUMBER<br>BUKU</small></div>
+        </div>
+      </div>
+    </section>
+    <section class="wrap sec book-discovery">
+      <header class="discovery-header">
+        <h2 class="section-title">Bacaan yang tersedia</h2>
+        <p class="section-desc">Koleksi dengan teks lengkap dan reader yang dapat dibuka langsung dari sumbernya.</p>
+      </header>
+      <div class="grid card-grid" id="featuredShelf" aria-busy="true"></div>
+      <p class="note" id="featuredMsg"></p>
+
+      <header class="discovery-header">
+        <h2 class="section-title">Novel Indonesia</h2>
+        <p class="section-desc">Teks yang ditemukan dari katalog Wikisource Indonesia.</p>
+      </header>
+      <div class="grid card-grid" id="indonesiaShelf" aria-busy="true"></div>
+      <p class="note" id="indonesiaMsg"></p>
+
+      <header class="discovery-header">
+        <h2 class="section-title">Novel internasional</h2>
+        <p class="section-desc">Koleksi berbahasa Inggris dengan akses baca yang terverifikasi.</p>
+      </header>
+      <div class="grid card-grid" id="internationalShelf" aria-busy="true"></div>
+      <p class="note" id="internationalMsg"></p>
+
+      <header class="discovery-header">
+        <h2 class="section-title">Baru ditambahkan di Internet Archive</h2>
+        <p class="section-desc">Katalog terbaru; akses baca atau peminjaman harus diperiksa pada halaman sumber.</p>
+      </header>
+      <div class="grid card-grid" id="newestShelf" aria-busy="true"></div>
+      <p class="note" id="newestMsg"></p>
+
+      <header class="discovery-header">
+        <h2 class="section-title">Telusuri Berdasarkan Kategori</h2>
+        <p class="section-desc">Pilih topik untuk mencari koleksi nyata dari sumber buku.</p>
+      </header>
+      <div class="category-grid">
+        <button class="category-card" data-cat="novel Indonesia" data-lang="id"><span class="category-icon">🇮🇩</span><span class="category-name">Novel Indonesia</span></button>
+        <button class="category-card" data-cat="novel" data-lang="en"><span class="category-icon">🌍</span><span class="category-name">Novel luar negeri</span></button>
+        <button class="category-card" data-cat="romance"><span class="category-icon">💕</span><span class="category-name">Romance</span></button>
+        <button class="category-card" data-cat="fantasy"><span class="category-icon">🐉</span><span class="category-name">Fantasy</span></button>
+        <button class="category-card" data-cat="science fiction"><span class="category-icon">🚀</span><span class="category-name">Science Fiction</span></button>
+        <button class="category-card" data-cat="horror"><span class="category-icon">👻</span><span class="category-name">Horror</span></button>
+        <button class="category-card" data-cat="mystery"><span class="category-icon">🔍</span><span class="category-name">Mystery</span></button>
+        <button class="category-card" data-cat="thriller"><span class="category-icon">⚡</span><span class="category-name">Thriller</span></button>
+        <button class="category-card" data-cat="adventure"><span class="category-icon">🗺️</span><span class="category-name">Adventure</span></button>
+        <button class="category-card" data-cat="historical fiction"><span class="category-icon">📜</span><span class="category-name">Historical Fiction</span></button>
+        <button class="category-card" data-cat="drama"><span class="category-icon">🎭</span><span class="category-name">Drama</span></button>
+        <button class="category-card" data-cat="comedy"><span class="category-icon">🎭</span><span class="category-name">Comedy</span></button>
+        <button class="category-card" data-cat="classic literature"><span class="category-icon">📖</span><span class="category-name">Classic Literature</span></button>
+        <button class="category-card" data-cat="short stories"><span class="category-icon">📚</span><span class="category-name">Short Stories</span></button>
+        <button class="category-card" data-cat="poetry"><span class="category-icon">🖋️</span><span class="category-name">Poetry</span></button>
+        <button class="category-card" data-cat="biography"><span class="category-icon">👤</span><span class="category-name">Biography</span></button>
+        <button class="category-card" data-cat="philosophy"><span class="category-icon">💭</span><span class="category-name">Philosophy</span></button>
+      </div>
+
+      <header class="discovery-header">
+        <h2 class="section-title">Lanjutkan Membaca</h2>
+        <p class="section-desc">Buku yang memiliki progres bacaan tersimpan.</p>
+      </header>
+      <div class="grid card-grid" id="continueShelf"></div>
+      <p class="note" id="continueMsg"></p>
+
+      <header class="discovery-header">
+        <h2 class="section-title">Terakhir Dilihat</h2>
+        <p class="section-desc">Buku yang baru saja Anda buka.</p>
+      </header>
+      <div class="grid card-grid" id="recentShelf" aria-busy="true"></div>
+      <p class="note" id="recentMsg"></p>
+    </section>
+  </div>
+  <!-- PENCARIAN -->
+  <div data-view-id="search" hidden><div class="wrap">
+    <div class="phead search-header">
+      <div class="search-header-top">
+        <h1 id="title">Jelajahi buku</h1>
+        <p class="search-subtitle">Temukan buku dari berbagai katalog dan periksa status akses bacanya.</p>
+        <p class="search-rights-note">Status hak cipta dan izin penggunaan dapat berbeda menurut negara. Periksa lisensi di halaman sumber setiap karya.</p>
+      </div>
+    </div>
+    <div class="search-main">
+      <aside class="search-sidebar">
+        <form class="filters" id="filters" aria-label="Filter pencarian">
+          <div class="filter-group">
+            <label class="filter-label" for="languageFilter">Bahasa</label>
+            <select id="languageFilter" name="lang" class="filter-select"><option value="">Semua</option><option value="id">Indonesia</option><option value="en">Inggris</option></select>
+          </div>
+          <div class="filter-group">
+            <label class="filter-label" for="genreFilter">Genre / kategori</label>
+            <select id="genreFilter" name="genre" class="filter-select">
+              <option value="">Semua kategori</option><option value="romance">Romance</option><option value="fantasy">Fantasy</option>
+              <option value="science fiction">Science Fiction</option><option value="horror">Horror</option><option value="mystery">Mystery</option>
+              <option value="thriller">Thriller</option><option value="adventure">Adventure</option><option value="historical fiction">Historical Fiction</option>
+              <option value="drama">Drama</option><option value="comedy">Comedy</option><option value="classic">Classic Literature</option>
+              <option value="short stories">Short Stories</option><option value="poetry">Poetry</option><option value="biography">Biography</option><option value="philosophy">Philosophy</option>
+            </select>
+          </div>
+          <div class="filter-group">
+            <label class="filter-label" for="yearFilter">Tahun terbit</label>
+            <input id="yearFilter" class="filter-select" name="year" type="number" min="1" max="2100" inputmode="numeric" placeholder="Tahun pasti">
+          </div>
+          <label class="filter-check"><input name="readable" type="checkbox"> Hanya yang bisa dibaca langsung</label>
+          <label class="filter-check"><input name="cover" type="checkbox"> Hanya dengan sampul</label>
+          <div class="filter-group">
+            <label class="filter-label" for="sortFilter">Urutkan</label>
+            <select id="sortFilter" name="sort" class="filter-select"><option value="rel">Relevansi</option><option value="az">Judul A–Z</option></select>
+          </div>
+        </form>
+      </aside>
+      <section class="search-results-section">
+        <div class="search-toolbar">
+          <span id="count" role="status" aria-live="polite" class="results-count"></span>
+          <div class="view-toggle">
+            <button class="view-btn" id="vGrid" type="button" aria-pressed="true" title="Tampilan grid">
+              <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><rect x="2" y="2" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.5"/><rect x="10" y="2" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.5"/><rect x="2" y="10" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.5"/><rect x="10" y="10" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.5"/></svg>
+            </button>
+            <button class="view-btn" id="vList" type="button" aria-pressed="false" title="Tampilan daftar">
+              <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><line x1="2" y1="5" x2="16" y2="5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="2" y1="9" x2="16" y2="9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="2" y1="13" x2="16" y2="13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+            </button>
+          </div>
+        </div>
+        <div id="results" class="grid search-grid"></div>
+        <div id="state"></div>
+        <p class="source-search-link">Jelajahi katalog resmi lainnya: <a id="standardEbooksSearch" href="https://standardebooks.org/ebooks" target="_blank" rel="noopener noreferrer">Cari di Standard Ebooks</a>. Ketersediaan EPUB dan lisensi mengikuti ketentuan sumber.</p>
+        <nav class="pager" aria-label="Halaman">
+          <button class="pager-btn" id="prev" type="button" disabled>Sebelumnya</button>
+          <span id="pageNo" class="pager-info"></span>
+          <button class="pager-btn" id="next" type="button" disabled>Berikutnya</button>
+        </nav>
+      </section>
+    </div>
+  </div></div>
+
+  <div data-view-id="favorites" hidden><div class="wrap">
+    <div class="list-header"><h1 class="list-title">Favorit</h1><p class="list-desc">Buku yang Anda simpan untuk dibaca nanti.</p></div>
+    <div class="grid list-grid" id="favGrid"></div><div id="favState"></div>
+    <button class="detail-btn" id="clearFav" type="button">Hapus semua favorit</button>
+  </div></div>
+  <div data-view-id="history" hidden><div class="wrap">
+    <div class="list-header"><h1 class="list-title">Riwayat bacaan</h1><p class="list-desc">Buku yang pernah Anda buka.</p></div>
+    <div class="grid list-grid" id="histGrid"></div><div id="histState"></div>
+    <button class="detail-btn" id="clearHist" type="button">Hapus riwayat</button>
+  </div></div>
+
+  <!-- DETAIL BUKU -->
+  <div data-view-id="detail" hidden><div class="wrap"><div class="detail-header"><a href="#/" class="detail-back">
+    <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M11.25 14.25L5.25 9L11.25 3.75" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    Kembali
+  </a></div><div id="detailRoot"></div></div></div>
+
+  <!-- BACA BUKU -->
+  <div data-view-id="reader" hidden>
+    <div class="reader-header">
+      <div class="wrap reader-header-inner">
+        <button class="reader-back" id="readerBack">
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M11.25 14.25L5.25 9L11.25 3.75" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Kembali
+        </button>
+        <div class="reader-title" id="readerBookTitle">Membaca Buku</div>
+        <div class="reader-actions">
+          <button class="reader-btn" id="readerTocBtn" title="Daftar Isi">Daftar Isi</button>
+          <button class="reader-btn" id="readerSettingsBtn" title="Pengaturan">Pengaturan</button>
+          <button class="reader-btn" id="readerBookmarkBtn" title="Tambah Bookmark">Bookmark</button>
+          <button class="reader-btn" id="readerFullscreenBtn" title="Layar Penuh">Layar Penuh</button>
+        </div>
+      </div>
+    </div>
+    <div class="reader-toolbar" id="readerToolbar">
+      <div class="wrap reader-toolbar-inner">
+        <div class="reader-nav">
+          <button class="reader-nav-btn" id="readerPrev">← Sebelumnya</button>
+          <span class="reader-page-info" id="readerPageInfo">Halaman - / -</span>
+          <button class="reader-nav-btn" id="readerNext">Berikutnya →</button>
+        </div>
+        <div class="reader-view-modes">
+          <button class="reader-mode-btn active" data-view="single" id="readerModeSingle">1 Halaman</button>
+          <button class="reader-mode-btn" data-view="spread" id="readerModeSpread">2 Halaman</button>
+        </div>
+        <div class="reader-zoom">
+          <button class="reader-zoom-btn" id="readerZoomOut">-</button>
+          <span id="readerZoomLevel">100%</span>
+          <button class="reader-zoom-btn" id="readerZoomIn">+</button>
+        </div>
+      </div>
+    </div>
+    <div class="reader-container" id="readerContainer">
+      <div class="reader-viewport" id="readerViewport" tabindex="0" aria-label="Isi buku"></div>
+    </div>
+    <p class="reader-source-note wrap" id="readerSourceNote" hidden></p>
+    <div class="reader-toc-panel" id="readerTocPanel">
+      <div class="reader-toc-header">
+        <span>Daftar Isi</span>
+        <button class="reader-toc-close" id="readerTocClose">×</button>
+      </div>
+      <div class="reader-toc-list" id="readerTocList"></div>
+    </div>
+    <div class="reader-settings-panel" id="readerSettingsPanel">
+      <div class="reader-settings-header">
+        <span>Pengaturan Membaca</span>
+        <button class="reader-settings-close" id="readerSettingsClose">×</button>
+      </div>
+      <div class="reader-settings-content">
+        <div class="reader-setting-group">
+          <label>Tema</label>
+          <div class="reader-theme-options">
+            <button class="reader-theme-btn active" data-theme="light">Terang</button>
+            <button class="reader-theme-btn" data-theme="sepia">Sepia</button>
+            <button class="reader-theme-btn" data-theme="dark">Gelap</button>
+          </div>
+        </div>
+        <div class="reader-setting-group">
+          <label>Ukuran Font</label>
+          <div class="reader-font-size">
+            <button id="readerFontSmaller">A-</button>
+            <span id="readerFontSizeVal">16px</span>
+            <button id="readerFontLarger">A+</button>
+          </div>
+        </div>
+        <div class="reader-setting-group">
+          <label>Jenis Font</label>
+          <select id="readerFontFamily">
+            <option value="Inter">Inter</option>
+            <option value="Merriweather">Merriweather</option>
+            <option value="Crimson Pro">Crimson Pro</option>
+            <option value="Georgia">Georgia</option>
+          </select>
+        </div>
+        <div class="reader-setting-group">
+          <label>Jarak Baris</label>
+          <input type="range" id="readerLineHeight" min="1.4" max="2.0" step="0.1" value="1.7">
+          <span id="readerLineHeightVal">1.7</span>
+        </div>
+        <div class="reader-setting-group">
+          <label>Lebar Area Baca</label>
+          <select id="readerWidth">
+            <option value="normal">Normal</option>
+            <option value="narrow">Sempit</option>
+            <option value="wide">Lebar</option>
+          </select>
+        </div>
+        <label class="reader-toggle"><input type="checkbox" id="readerHideToolbar"> Sembunyikan Toolbar</label>
+      </div>
+    </div>
+  </div>
+
+  <!-- PERPUSTAKAAN SAYA -->
+  <div data-view-id="mylibrary" hidden><div class="wrap">
+    <div class="list-header">
+      <h1 class="list-title">Perpustakaan Saya</h1>
+      <p class="list-desc">Lanjutkan membaca, bookmark, dan riwayat bacaan Anda.</p>
+    </div>
+    <div class="library-tabs">
+      <button class="library-tab active" data-tab="continue">Lanjut Membaca</button>
+      <button class="library-tab" data-tab="recent">Baru Dibaca</button>
+      <button class="library-tab" data-tab="bookmarks">Bookmark</button>
+      <button class="library-tab" data-tab="favorites">Favorit</button>
+      <button class="library-tab" data-tab="uploads">File Saya</button>
+      <button class="library-tab" data-tab="want">Ingin Dibaca</button>
+      <button class="library-tab" data-tab="reading">Sedang Dibaca</button>
+      <button class="library-tab" data-tab="completed">Selesai</button>
+    </div>
+    <section class="upload-panel" aria-labelledby="uploadTitle">
+      <div><h2 id="uploadTitle">Baca buku milik Anda</h2><p>File PDF dan EPUB disimpan hanya di perangkat ini.</p></div>
+      <label class="detail-btn detail-btn-primary upload-button" for="bookUpload">Pilih PDF / EPUB</label>
+      <input id="bookUpload" type="file" accept=".pdf,.epub,application/pdf,application/epub+zip" multiple hidden>
+    </section>
+    <div class="library-content" id="libraryContent"></div>
+  </div></div>
+</main>
+
+<footer class="foot"><div class="wrap"><div><b>PustakaKita</b><br><span class="footer-tagline">Jelajahi dunia melalui halaman buku.</span></div><nav aria-label="Footer"><a href="#/">Beranda</a><a href="#/cari">Jelajahi Buku</a><a href="#/favorit">Favorit</a><a href="#/riwayat">Riwayat</a><a href="./about.html">Tentang</a></nav><small class="footer-sources">Katalog: Wikisource, Internet Archive, Project Gutenberg, dan Standard Ebooks. Periksa lisensi serta ketersediaan pada sumber asli.</small></div></footer>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/epubjs/dist/epub.min.js"></script>
+<script defer src="./book-agent.js"></script>
+<script defer src="./API.js"></script>
+<script defer src="./APP.js"></script>
+<script defer src="./home.js"></script>
+<script defer src="./search.js"></script>
+<script defer src="./detail.js"></script>
+<script defer src="./list.js"></script>
+<script defer src="./reader.js"></script>
+<script defer src="./library.js"></script>
+  </body></html>

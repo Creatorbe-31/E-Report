@@ -1,0 +1,19 @@
+{
+  "name": "PustakaKita",
+  "short_name": "PustakaKita",
+  "description": "Perpustakaan digital untuk menemukan dan membaca buku dari sumber terbuka.",
+  "start_url": "./index.htm#/",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#F8F7F4",
+  "theme_color": "#17243A",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "./images/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
