@@ -1,4 +1,4 @@
-const CACHE_NAME = 'pustakakita-v8';
+const CACHE_NAME = 'pustakakita-v11';
 const APP_FILES = [
   './index.htm',
   './about.html',

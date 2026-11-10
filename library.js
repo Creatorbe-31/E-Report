@@ -79,6 +79,9 @@
     var value=key.slice('pk:read:'.length, -suffix.length);
     try { return decodeURIComponent(value); } catch { return value; }
   }
+  function isCompletedStatus(value){
+    return value === 'complete' || value === 'completed';
+  }
   function render(){
     var container = document.getElementById('libraryContent');
     if(!container) return;
@@ -179,10 +182,12 @@
       container.innerHTML='<div class="grid list-grid">'+favsArr.map(PK.card).join('')+'</div>';
       return;
     }
-    if(activeTab==='want' || activeTab==='reading' || activeTab==='completed'){
+    if(activeTab==='want' || activeTab==='reading' || activeTab==='completed' || activeTab==='complete'){
       var statuses=PK.statuses();
-      var books=Object.keys(statuses).filter(function(id){return statuses[id]===activeTab;})
-        .map(function(id){return PK.find(id);}).filter(Boolean);
+      var books=Object.keys(statuses).filter(function(id){
+        if(activeTab==='completed' || activeTab==='complete') return isCompletedStatus(statuses[id]);
+        return statuses[id]===activeTab;
+      }).map(function(id){return PK.find(id);}).filter(Boolean);
       renderBookCards(container,books);
       return;
     }

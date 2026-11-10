@@ -1,4 +1,20 @@
 const API = (() => {
+  const languageCodes = {
+    ind: 'id', eng: 'en', spa: 'es', fre: 'fr', fra: 'fr', deu: 'de', ger: 'de',
+    ita: 'it', por: 'pt', rus: 'ru', jpn: 'ja', zho: 'zh', chi: 'zh', ara: 'ar',
+    hin: 'hi', nld: 'nl', dut: 'nl', swe: 'sv', dan: 'da', nor: 'no', fin: 'fi',
+    pol: 'pl', tur: 'tr', vie: 'vi', kor: 'ko', ell: 'el', gre: 'el', heb: 'he',
+    lat: 'la', ces: 'cs', hun: 'hu', ron: 'ro', rum: 'ro', ukr: 'uk', tha: 'th',
+    english: 'en', indonesian: 'id', indonesia: 'id', spanish: 'es', french: 'fr',
+    german: 'de', italian: 'it', portuguese: 'pt', russian: 'ru', japanese: 'ja',
+    chinese: 'zh', arabic: 'ar', dutch: 'nl'
+  };
+
+  function normalizeLanguage(value) {
+    const language = String(value || '').trim().toLowerCase();
+    return languageCodes[language] || language;
+  }
+
   function toCard(book) {
     const sources = book.sources || [book.source].filter(Boolean);
     const readUrl = book.readUrl || '';
@@ -11,10 +27,25 @@ const API = (() => {
         access = book.accessType === 'user' ? 'File milik Anda' : 'Teks lengkap · gratis';
         break;
       case 'external-full':
-        access = 'Baca di sumber resmi';
+        access = 'Teks penuh gratis · baca di sumber resmi';
         break;
       case 'preview':
         access = 'Pratinjau resmi';
+        break;
+      case 'free-epub':
+        access = 'EPUB gratis · sumber resmi';
+        break;
+      case 'free-pdf':
+        access = 'PDF gratis · sumber resmi';
+        break;
+      case 'borrow':
+        access = 'Peminjaman diperlukan';
+        break;
+      case 'paid-purchase':
+        access = 'Pembelian diperlukan';
+        break;
+      case 'paid-subscription':
+        access = 'Langganan diperlukan';
         break;
       case 'metadata':
         access = 'Cek pinjam / baca di sumber asli';
@@ -24,8 +55,7 @@ const API = (() => {
     }
 
     const rawLanguage = book.language || book.lang || '';
-    const language = ({ ind: 'id', eng: 'en', indonesia: 'id', english: 'en' })[String(rawLanguage).toLowerCase()] ||
-      String(rawLanguage).toLowerCase().slice(0, 2);
+    const language = normalizeLanguage(rawLanguage);
     return {
       id: book.id || book.identifier || `book:${Date.now()}:${Math.random().toString(36).slice(2)}`,
       source: sources.join(' + ') || book.source || 'Katalog buku',
@@ -41,13 +71,19 @@ const API = (() => {
       desc: book.description || book.desc || '',
       cover: book.cover || book.thumbnail || '',
       lang: language,
-      subjects: book.categories || book.subjects || [],
+      subjects: Array.isArray(book.categories) ? book.categories :
+        Array.isArray(book.subjects) ? book.subjects : [],
       access,
       accessType: book.accessType || 'external',
       readUrl,
       fileType: book.readFormat || '',
       previewUrl,
       externalReadUrl: book.externalReadUrl || '',
+      downloadUrl: book.downloadUrl || '',
+      buyUrl: book.buyUrl || '',
+      price: book.price || null,
+      currency: book.currency || '',
+      formats: Array.isArray(book.formats) ? book.formats : [],
       infoUrl: book.infoLink || '',
       localFile: book.localFile || false,
       rights: book.rights || '',
@@ -112,7 +148,9 @@ const API = (() => {
 
   async function readableBooks(query) {
     const result = await search({ q: query });
-    return result.books.filter(book => ['full', 'user'].includes(book.accessType) && book.readUrl);
+    return result.books.filter(book =>
+      ['full', 'user', 'free-epub', 'free-pdf'].includes(book.accessType) && book.readUrl
+    );
   }
 
   return {

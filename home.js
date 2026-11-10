@@ -2,7 +2,9 @@
   let loaded = false;
   const $ = id => document.getElementById(id);
   const jobs = {
-    featuredShelf: ['featuredMsg', API.popularBooks, books => books.filter(book => book.readUrl && book.accessType === 'full')],
+    featuredShelf: ['featuredMsg', API.popularBooks, books => books.filter(book =>
+      book.readUrl && ['full', 'free-epub', 'free-pdf'].includes(book.accessType)
+    )],
     indonesiaShelf: ['indonesiaMsg', async () => (await API.search({ q: 'novel', lang: 'id' })).books, books => books.filter(book => book.readUrl)],
     internationalShelf: ['internationalMsg', async () => (await API.search({ q: 'novel', lang: 'en' })).books, books => books.filter(book => book.readUrl)],
     newestShelf: ['newestMsg', API.newestBooks]
@@ -55,7 +57,7 @@
         const progress = PK.store.get(`pk:read:${encodeURIComponent(id)}:progress`, null);
         return book ? { ...book, _progress: progress } : null;
       })
-      .filter(book => book && book.readUrl && ['full', 'user'].includes(book.accessType))
+      .filter(book => book && book.readUrl && ['full', 'user', 'free-epub', 'free-pdf'].includes(book.accessType))
       .slice(0, 10);
     if (continueShelf && continueMessage) {
       continueShelf.innerHTML = continuing.map(PK.card).join('');
@@ -63,7 +65,7 @@
     }
 
     const history = PK.hist()
-      .filter(book => book.readUrl && ['full', 'user'].includes(book.accessType))
+      .filter(book => book.readUrl && ['full', 'user', 'free-epub', 'free-pdf'].includes(book.accessType))
       .slice(0, 12);
     const recent = $('recentShelf');
     const recentMessage = $('recentMsg');

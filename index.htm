@@ -197,16 +197,21 @@
         <form class="filters" id="filters" aria-label="Filter pencarian">
           <div class="filter-group">
             <label class="filter-label" for="languageFilter">Bahasa</label>
-            <select id="languageFilter" name="lang" class="filter-select"><option value="">Semua</option><option value="id">Indonesia</option><option value="en">Inggris</option></select>
+            <select id="languageFilter" name="lang" class="filter-select"><option value="">Semua bahasa</option></select>
           </div>
           <div class="filter-group">
             <label class="filter-label" for="genreFilter">Genre / kategori</label>
             <select id="genreFilter" name="genre" class="filter-select">
-              <option value="">Semua kategori</option><option value="romance">Romance</option><option value="fantasy">Fantasy</option>
+              <option value="">Semua kategori</option>
+              <option value="fiction">Fiction</option><option value="romance">Romance</option><option value="fantasy">Fantasy</option>
               <option value="science fiction">Science Fiction</option><option value="horror">Horror</option><option value="mystery">Mystery</option>
               <option value="thriller">Thriller</option><option value="adventure">Adventure</option><option value="historical fiction">Historical Fiction</option>
-              <option value="drama">Drama</option><option value="comedy">Comedy</option><option value="classic">Classic Literature</option>
-              <option value="short stories">Short Stories</option><option value="poetry">Poetry</option><option value="biography">Biography</option><option value="philosophy">Philosophy</option>
+              <option value="drama">Drama</option><option value="comedy">Comedy</option><option value="classic literature">Classic Literature</option>
+              <option value="short stories">Short Stories</option><option value="poetry">Poetry</option><option value="biography">Biography</option>
+              <option value="philosophy">Philosophy</option><option value="history">History</option><option value="science">Science</option>
+              <option value="technology">Technology</option><option value="education">Education</option><option value="religion">Religion</option>
+              <option value="psychology">Psychology</option><option value="business">Business</option><option value="art">Art</option>
+              <option value="children">Children's Books</option><option value="young adult">Young Adult</option>
             </select>
           </div>
           <div class="filter-group">
@@ -216,14 +221,39 @@
           <label class="filter-check"><input name="readable" type="checkbox"> Hanya yang bisa dibaca langsung</label>
           <label class="filter-check"><input name="cover" type="checkbox"> Hanya dengan sampul</label>
           <div class="filter-group">
-            <label class="filter-label" for="sortFilter">Urutkan</label>
-            <select id="sortFilter" name="sort" class="filter-select"><option value="rel">Relevansi</option><option value="az">Judul A–Z</option></select>
+            <label class="filter-label" for="sourceFilter">Sumber katalog</label>
+            <select id="sourceFilter" name="source" class="filter-select">
+              <option value="">Semua sumber</option>
+              <option value="openlibrary">Open Library</option>
+              <option value="googlebooks">Google Books</option>
+              <option value="gutenberg">Project Gutenberg</option>
+              <option value="archive">Internet Archive</option>
+              <option value="wikisource">Wikisource</option>
+              <option value="standardebooks">Standard Ebooks</option>
+            </select>
           </div>
+          <div class="filter-group">
+            <label class="filter-label" for="sortFilter">Urutkan</label>
+            <select id="sortFilter" name="sort" class="filter-select">
+              <option value="rel">Relevansi</option>
+              <option value="az">Judul A–Z</option>
+              <option value="za">Judul Z–A</option>
+              <option value="newest">Tahun terbaru</option>
+            </select>
+          </div>
+          <button class="detail-btn" id="clearFilters" type="button">Reset filter</button>
         </form>
       </aside>
       <section class="search-results-section">
+        <div class="access-filters" role="group" aria-label="Filter akses buku">
+          <button type="button" class="access-filter active" data-access="all" aria-pressed="true">Semua</button>
+          <button type="button" class="access-filter" data-access="free" aria-pressed="false">Gratis</button>
+          <button type="button" class="access-filter" data-access="paid" aria-pressed="false">Berbayar</button>
+          <span id="accessCount" class="access-count" aria-live="polite"></span>
+        </div>
         <div class="search-toolbar">
           <span id="count" role="status" aria-live="polite" class="results-count"></span>
+          <span id="sourceStatus" role="status" aria-live="polite"></span>
           <div class="view-toggle">
             <button class="view-btn" id="vGrid" type="button" aria-pressed="true" title="Tampilan grid">
               <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><rect x="2" y="2" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.5"/><rect x="10" y="2" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.5"/><rect x="2" y="10" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.5"/><rect x="10" y="10" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.5"/></svg>
@@ -371,7 +401,7 @@
       <button class="library-tab" data-tab="uploads">File Saya</button>
       <button class="library-tab" data-tab="want">Ingin Dibaca</button>
       <button class="library-tab" data-tab="reading">Sedang Dibaca</button>
-      <button class="library-tab" data-tab="completed">Selesai</button>
+      <button class="library-tab" data-tab="complete">Selesai</button>
     </div>
     <section class="upload-panel" aria-labelledby="uploadTitle">
       <div><h2 id="uploadTitle">Baca buku milik Anda</h2><p>File PDF dan EPUB disimpan hanya di perangkat ini.</p></div>

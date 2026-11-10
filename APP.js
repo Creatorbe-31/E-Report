@@ -30,67 +30,27 @@ const PK = (() => {
   const savedBooks = () => store.get('pk:bookmarks', {});
   const hist = () => store.get('pk:hist', []);
   const wantToRead = () => store.get('pk:wantread', {});
-  const statuses = () => store.get('pk:reading-status', {});
-  function migrateLegacyCatalog() {
-    const removedIds = new Set();
-    const isLegacyBook = book => {
-      if (!book || typeof book !== 'object') return false;
-      const sources = [...(Array.isArray(book.sources) ? book.sources : []), book.source];
-      return sources.some(source => /gramedia/i.test(String(source || ''))) ||
-        book.accessType === 'purchase' ||
-        Boolean(book.purchaseUrl || book.price);
-    };
-
-    ['pk:fav', 'pk:wantread'].forEach(key => {
-      const saved = store.get(key, {});
-      if (!saved || typeof saved !== 'object' || Array.isArray(saved)) return;
-      Object.entries(saved).forEach(([id, book]) => {
-        if (!isLegacyBook(book)) return;
-        removedIds.add(id);
-        delete saved[id];
-      });
-      store.set(key, saved);
-    });
-
-    const history = hist();
-    if (Array.isArray(history)) {
-      const kept = history.filter(book => {
-        if (!isLegacyBook(book)) return true;
-        if (book.id) removedIds.add(book.id);
-        return false;
-      });
-      if (kept.length !== history.length) store.set('pk:hist', kept);
-    }
-
-    try {
-      for (let index = 0; index < localStorage.length; index += 1) {
-        const key = localStorage.key(index);
-        if (!key || !key.startsWith('pk:b:')) continue;
-        let book;
-        try { book = JSON.parse(localStorage.getItem(key)); } catch { continue; }
-        if (!isLegacyBook(book)) continue;
-        removedIds.add(book.id || key.slice(5));
-        localStorage.removeItem(key);
-        index -= 1;
+  const statuses = () => {
+    const saved = store.get('pk:reading-status', {});
+    if (!saved || typeof saved !== 'object' || Array.isArray(saved)) return {};
+    let migrated = false;
+    Object.keys(saved).forEach(id => {
+      if (saved[id] === 'completed') {
+        saved[id] = 'complete';
+        migrated = true;
       }
-
-      const savedStatuses = statuses();
-      removedIds.forEach(id => delete savedStatuses[id]);
-      store.set('pk:reading-status', savedStatuses);
-      removedIds.forEach(id => {
-        const prefix = `pk:read:${encodeURIComponent(id)}:`;
-        for (let index = localStorage.length - 1; index >= 0; index -= 1) {
-          const key = localStorage.key(index);
-          if (key && key.startsWith(prefix)) localStorage.removeItem(key);
-        }
-        sessionStorage.removeItem(`pk:b:${id}`);
-      });
-    } catch (error) {
-      console.error('Katalog lama tidak dapat dibersihkan seluruhnya.', error);
-    }
+    });
+    if (migrated) store.set('pk:reading-status', saved);
+    return saved;
+  };
+  function toggleBookmark(book) {
+    const saved = savedBooks();
+    if (saved[book.id]) delete saved[book.id];
+    else saved[book.id] = book;
+    store.set('pk:bookmarks', saved);
+    toast(saved[book.id] ? 'Buku ditambahkan ke bookmark' : 'Bookmark buku dihapus');
+    return Boolean(saved[book.id]);
   }
-  migrateLegacyCatalog();
-
   function setReadingStatus(book, status) {
     const saved = statuses();
     const wanted = wantToRead();
@@ -112,14 +72,6 @@ const PK = (() => {
       delete f[b.id];
     } else {
       f[b.id] = b;
-    }
-    function toggleBookmark(book) {
-      const saved = savedBooks();
-      if (saved[book.id]) delete saved[book.id];
-      else saved[book.id] = book;
-      store.set('pk:bookmarks', saved);
-      toast(saved[book.id] ? 'Buku ditambahkan ke bookmark' : 'Bookmark buku dihapus');
-      return Boolean(saved[book.id]);
     }
     store.set('pk:fav', f);
     // Update all favorite buttons
@@ -162,6 +114,11 @@ const PK = (() => {
     const author = b.author && b.author !== 'Penulis tidak diketahui' ? `<p class="card-author">${esc(b.author)}</p>` : '';
     const source = b.source ? `<span class="card-source">${esc(b.source)}</span>` : '';
     const access = b.access ? `<span class="card-access">${esc(b.access)}</span>` : '';
+    const price = b.price != null && b.currency && /^[A-Z]{3}$/.test(b.currency)
+      ? `<span class="card-price">${esc(new Intl.NumberFormat('id-ID', { style: 'currency', currency: b.currency }).format(b.price))}</span>`
+      : ['paid-purchase', 'paid-subscription'].includes(b.accessType)
+        ? '<span class="card-price">Cek harga di sumber resmi</span>'
+        : '';
     const publisher = b.publisher ? `<span class="card-publisher">${esc(b.publisher)}</span>` : '';
     const progress = Number(b._progress?.percent ?? b._progress?.page);
     const progressBar = Number.isFinite(progress) && progress > 0
@@ -186,7 +143,7 @@ const PK = (() => {
           ${rating}
         </div>
         <div class="card-publisher">${publisher}</div>
-        <div class="card-foot">${access}${source}</div>
+        <div class="card-foot">${access}${source}${price}</div>
         ${progressBar}
       </div>
     </article>`;
@@ -270,8 +227,14 @@ const PK = (() => {
     const raw = location.hash.replace(/^#\/?/, ''), qi = raw.indexOf('?');
     const path = qi < 0 ? raw : raw.slice(0, qi), params = new URLSearchParams(qi < 0 ? '' : raw.slice(qi + 1));
     let name = ROUTES[path.split('/')[0]], arg = '';
-  if (path.startsWith('buku/')) { name = 'detail'; arg = decodeURIComponent(path.slice(5)); }
-    if (path.startsWith('baca/')) { name = 'reader'; arg = decodeURIComponent(path.slice(5)); }
+    if (path.startsWith('buku/')) {
+      try { name = 'detail'; arg = decodeURIComponent(path.slice(5)); }
+      catch { name = 'home'; }
+    }
+    if (path.startsWith('baca/')) {
+      try { name = 'reader'; arg = decodeURIComponent(path.slice(5)); }
+      catch { name = 'home'; }
+    }
     if (!name) name = 'home';
     document.body.dataset.view = name;
     document.querySelectorAll('[data-view-id]').forEach(s => s.hidden = s.dataset.viewId !== name);

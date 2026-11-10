@@ -9,6 +9,14 @@
       return '';
     }
   };
+  const displayPrice = book => {
+    if (book.price == null || !/^[A-Z]{3}$/.test(book.currency || '')) return 'Cek harga di sumber resmi';
+    try {
+      return new Intl.NumberFormat('id-ID', { style: 'currency', currency: book.currency }).format(book.price);
+    } catch {
+      return `${book.price} ${book.currency}`;
+    }
+  };
   function actionLink(url, label, primary = false) {
     const safe = safeUrl(url);
     if (!safe) return '';
@@ -21,7 +29,7 @@
       ? `<img src="${esc(book.cover)}" alt="Sampul ${esc(book.title)}" data-t="${esc(book.title)}">`
       : '';
     const placeholder = `<div class="detail-cover-placeholder"${image ? ' hidden' : ''}><span class="cover-placeholder-mark" aria-hidden="true">Buku</span><span>${esc(book.title)}</span></div>`;
-    const readableFile = ['full', 'user'].includes(book.accessType) &&
+    const readableFile = ['full', 'user', 'free-epub', 'free-pdf'].includes(book.accessType) &&
       (book.localFile || Boolean(safeUrl(book.readUrl)));
     const preview = book.previewUrl;
     const externalRead = book.accessType === 'external-full' && book.externalReadUrl;
@@ -31,6 +39,7 @@
     const sourceLinks = (book.sourceIds || [])
       .filter(source => safeUrl(source.infoUrl))
       .map(source => actionLink(source.infoUrl, `Buka ${esc(source.source)}`));
+    const formats = [...new Set([book.fileType, ...(book.formats || [])].filter(Boolean))];
     const rows = [
       ['Sumber', book.source],
       ['Identitas sumber', (book.sourceIds || []).map(source => `${source.source}: ${source.id}`).join('; ') || book.id],
@@ -38,7 +47,8 @@
       ['Tahun terbit', book.year],
       ['Ditambahkan', book.addedDate],
       ['Jumlah halaman', book.pages],
-      ['Format', book.fileType],
+      ['Harga', ['paid-purchase', 'paid-subscription'].includes(book.accessType) ? displayPrice(book) : ''],
+      ['Format', formats.join(', ')],
       ['ISBN', book.isbn],
       ['Bahasa', book.lang],
       ['Kategori', (book.subjects || []).join(', ')],
@@ -58,6 +68,9 @@
           ${readableFile ? `<a class="detail-btn detail-btn-primary" href="#/baca/${encodeURIComponent(book.id)}">${savedProgress ? 'Lanjutkan Membaca' : 'Baca Sekarang'}</a>` : ''}
           ${preview ? actionLink(book.previewUrl, 'Buka Pratinjau Resmi', true) : ''}
           ${externalRead ? actionLink(book.externalReadUrl, 'Baca di Sumber Resmi', true) : ''}
+          ${book.accessType === 'borrow' ? actionLink(book.infoUrl, 'Pinjam di Sumber Resmi', true) : ''}
+          ${book.downloadUrl ? actionLink(book.downloadUrl, `Unduh ${esc(formats.join(', ') || 'Buku')}`) : ''}
+          ${book.accessType === 'paid-purchase' ? actionLink(book.buyUrl || book.infoUrl, 'Beli Buku', true) : ''}
           ${sourceLinks.length ? sourceLinks.join('') : safeInfo ? actionLink(book.infoUrl, 'Halaman Sumber') : ''}
           <button class="detail-btn" id="favoriteBook" type="button"></button>
           <button class="detail-btn" id="bookmarkBook" type="button"></button>

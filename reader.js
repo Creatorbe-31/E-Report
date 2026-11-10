@@ -472,7 +472,7 @@
     if (sourceNote) {
       sourceNote.replaceChildren();
       sourceNote.hidden = true;
-      if (book.sources?.length || book.rights) {
+      if (book?.sources?.length || book?.rights) {
         const link = book.infoUrl ? document.createElement('a') : null;
         if (link) {
           link.href = book.infoUrl;
