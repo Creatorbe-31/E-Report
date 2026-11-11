@@ -15,6 +15,7 @@
   let renderGeneration = 0;
   let resizeTimer = 0;
   let lastRenderWidth = 0;
+  let lastActivityAt = 0;
 
   const $ = id => document.getElementById(id);
   const progressKey = id => `pk:read:${encodeURIComponent(id)}:progress`;
@@ -35,6 +36,54 @@
     if (!book) return;
     PK.store.set(progressKey(book.id), { ...data, updatedAt: Date.now() });
     PK.store.set(`pk:b:${book.id}`, book);
+    if (Number(data.percent) >= 100 && PK.statuses()[book.id] !== 'complete') {
+      PK.setReadingStatus(book, 'complete');
+    }
+  }
+
+  function checkpointReadingTime(force) {
+    if (!book || !lastActivityAt) return;
+    const now = Date.now();
+    const active = document.body.dataset.view === 'reader' && !document.hidden;
+    if (force || active) {
+      const seconds = Math.min(30, Math.floor((now - lastActivityAt) / 1000));
+      if (seconds > 0) {
+        const savedTotals = PK.store.get('pk:reading-time', {});
+        const totals = savedTotals && typeof savedTotals === 'object' && !Array.isArray(savedTotals)
+          ? savedTotals
+          : {};
+        totals[book.id] = (Number(totals[book.id]) || 0) + seconds;
+        PK.store.set('pk:reading-time', totals);
+      }
+    }
+    lastActivityAt = active ? now : 0;
+  }
+
+  function saveNote() {
+    if (!book) return;
+    let quote = window.getSelection()?.toString().trim() || '';
+    if (!quote && rendition) {
+      quote = rendition.getContents()
+        .map(contents => contents.window?.getSelection()?.toString().trim() || '')
+        .find(Boolean) || '';
+    }
+    const text = window.prompt('Tulis catatan untuk buku ini:', '');
+    if (text === null || (!text.trim() && !quote)) return;
+    const location = rendition?.currentLocation()?.start?.cfi ||
+      (textMode ? $('readerViewport')?.scrollTop : page);
+    const notes = PK.store.get('pk:notes', []);
+    const savedNotes = Array.isArray(notes) ? notes : [];
+    savedNotes.unshift({
+      id: `${Date.now()}-${Math.random().toString(36).slice(2)}`,
+      bookId: book.id,
+      bookTitle: book.title,
+      quote,
+      text: text.trim(),
+      position: location,
+      createdAt: Date.now()
+    });
+    PK.store.set('pk:notes', savedNotes);
+    PK.toast('Catatan disimpan di Perpustakaan Saya');
   }
 
   function updatePdfControls() {
@@ -400,6 +449,7 @@
       PK.store.set(bookmarksKey(book.id), [...saved, { position, page }]);
       PK.toast('Bookmark disimpan');
     });
+    $('readerNoteBtn')?.addEventListener('click', saveNote);
     document.addEventListener('keydown', event => {
       if (document.body.dataset.view !== 'reader' ||
           event.target.closest('input, textarea, select, [contenteditable="true"]')) return;
@@ -432,6 +482,13 @@
 
   setupControls();
   setupSettings();
+  setInterval(() => checkpointReadingTime(false), 15000);
+  addEventListener('hashchange', () => checkpointReadingTime(true));
+  addEventListener('pagehide', () => checkpointReadingTime(true));
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) checkpointReadingTime(true);
+    else if (book && document.body.dataset.view === 'reader') lastActivityAt = Date.now();
+  });
 
   addEventListener('resize', () => {
     const viewport = $('readerViewport');
@@ -522,6 +579,7 @@
       showMessage('Tidak ada tautan baca untuk buku ini.');
       return;
     }
+    lastActivityAt = Date.now();
     PK.addHist(book);
     if (!['reading', 'complete'].includes(PK.statuses()[book.id])) {
       PK.setReadingStatus(book, 'reading');

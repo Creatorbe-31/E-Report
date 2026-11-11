@@ -64,6 +64,20 @@ const PK = (() => {
     if (status === 'want') wanted[book.id] = book;
     else delete wanted[book.id];
     store.set('pk:wantread', wanted);
+    if (status === 'complete') {
+      const savedCompletions = store.get('pk:read:completions', {});
+      const completed = savedCompletions && typeof savedCompletions === 'object' && !Array.isArray(savedCompletions)
+        ? savedCompletions
+        : {};
+      if (!completed[book.id]) {
+        completed[book.id] = {
+          completedAt: Date.now(),
+          title: book.title,
+          subjects: Array.isArray(book.subjects) ? book.subjects : []
+        };
+        store.set('pk:read:completions', completed);
+      }
+    }
     return status;
   }
   function toggleFav(b) {

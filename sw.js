@@ -1,4 +1,4 @@
-const CACHE_NAME = 'pustakakita-v11';
+const CACHE_NAME = 'pustakakita-v12';
 const APP_FILES = [
   './index.htm',
   './about.html',
@@ -15,6 +15,9 @@ const APP_FILES = [
   './reader.js',
   './library.js'
 ];
+const APP_ASSET_PATHS = new Set(
+  APP_FILES.map(file => new URL(file, self.registration.scope).pathname)
+);
 
 self.addEventListener('install', event => {
   event.waitUntil(
@@ -35,9 +38,25 @@ self.addEventListener('fetch', event => {
   if (event.request.method !== 'GET' || requestUrl.origin !== self.location.origin) return;
 
   if (event.request.mode === 'navigate') {
-    event.respondWith(fetch(event.request).catch(() => caches.match('./index.htm')));
+    event.respondWith(fetch(event.request).catch(() =>
+      caches.match(event.request).then(response => response || caches.match('./index.htm'))
+    ));
     return;
   }
 
-  event.respondWith(caches.match(event.request).then(response => response || fetch(event.request)));
+  if (!APP_ASSET_PATHS.has(requestUrl.pathname)) return;
+
+  event.respondWith(fetch(event.request).then(response => {
+    if (!response.ok) return response;
+
+    return caches.open(CACHE_NAME)
+      .then(cache => cache.put(event.request, response.clone()))
+      .then(() => response, error => {
+        console.error('Gagal memperbarui cache asset.', error);
+        return response;
+      });
+  }, networkError => caches.match(event.request).then(response => {
+    if (response) return response;
+    throw networkError;
+  })));
 });

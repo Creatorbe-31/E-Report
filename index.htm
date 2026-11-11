@@ -305,6 +305,7 @@
           <button class="reader-btn" id="readerTocBtn" title="Daftar Isi">Daftar Isi</button>
           <button class="reader-btn" id="readerSettingsBtn" title="Pengaturan">Pengaturan</button>
           <button class="reader-btn" id="readerBookmarkBtn" title="Tambah Bookmark">Bookmark</button>
+          <button class="reader-btn" id="readerNoteBtn" title="Simpan catatan atau kutipan">Catatan</button>
           <button class="reader-btn" id="readerFullscreenBtn" title="Layar Penuh">Layar Penuh</button>
         </div>
       </div>
@@ -393,10 +394,31 @@
       <h1 class="list-title">Perpustakaan Saya</h1>
       <p class="list-desc">Lanjutkan membaca, bookmark, dan riwayat bacaan Anda.</p>
     </div>
+    <section class="library-dashboard" aria-label="Statistik dan target membaca">
+      <div class="reading-goal-card">
+        <div class="goal-ring" id="readingGoalRing" role="img" aria-label="Progres target membaca">
+          <span id="readingGoalPercent">0%</span>
+        </div>
+        <div>
+          <h2>Target membaca tahun ini</h2>
+          <p id="readingGoalProgress" aria-live="polite"></p>
+        </div>
+        <div class="reading-goal-controls">
+          <label for="readingGoalInput">Target buku</label>
+          <input id="readingGoalInput" type="number" min="1" max="365" value="12">
+          <button class="detail-btn detail-btn-primary" id="saveReadingGoal" type="button">Simpan target</button>
+        </div>
+      </div>
+      <div class="reading-analytics" id="readingAnalytics" aria-live="polite"></div>
+    </section>
+    <div class="library-actions">
+      <button class="detail-btn" id="exportLibrary" type="button">Ekspor perpustakaan (JSON)</button>
+    </div>
     <div class="library-tabs">
       <button class="library-tab active" data-tab="continue">Lanjut Membaca</button>
       <button class="library-tab" data-tab="recent">Baru Dibaca</button>
       <button class="library-tab" data-tab="bookmarks">Bookmark</button>
+      <button class="library-tab" data-tab="notes">Catatan &amp; Kutipan</button>
       <button class="library-tab" data-tab="favorites">Favorit</button>
       <button class="library-tab" data-tab="uploads">File Saya</button>
       <button class="library-tab" data-tab="want">Ingin Dibaca</button>
